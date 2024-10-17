@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .redirect-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .redirect-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Welcome, <span th:text="${user.name}"></span>!</h1>
+<p>Your Balance: <span th:text="${user.initialIncome}"></span></p>
+
+<!-- Button to redirect to login page -->
+<button class="redirect-btn" onclick="window.location.href='/finance/create'">Go to Login</button>
+
+<h2>Add Transaction</h2>
+<form th:action="@{/finance/user/{id}/addTransaction(id=${user.id})}" th:object="${transaction}" method="post">
+    <label for="type">Type (income/expense):</label>
+    <input type="text" id="type" th:field="*{type}" placeholder="Enter type" required>
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" th:field="*{amount}" placeholder="Enter amount" required>
+
+    <label for="category">Category:</label>
+    <input type="text" id="category" th:field="*{category}" placeholder="Enter category" required>
+
+    <button type="submit">Add Transaction</button>
+</form>
+
+<h2>Transaction History</h2>
+<ul>
+    <li th:each="transaction : ${transactions}">
+        <span th:text="${transaction.type}"></span> of 
+        <span th:text="${transaction.amount}"></span> 
+        (Category: <span th:text="${transaction.category}"></span>) 
+        on <span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span>
+    </li>
+</ul>
+
+</body>
+</html>
